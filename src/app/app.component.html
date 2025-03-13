@@ -1,0 +1,12 @@
+<main class="main">
+  <ul ngbNav #nav="ngbNav" class="nav-tabs">
+    <li ngbNavItem>
+      <button ngbNavLink routerLink="">Home</button>
+    </li>
+    <li ngbNavItem>
+      <button ngbNavLink routerLink="/page2">Page 2</button>
+    </li>
+  </ul>
+  <div [ngbNavOutlet]="nav"></div>
+  <router-outlet />
+</main>
