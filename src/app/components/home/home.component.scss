@@ -1,0 +1,12 @@
+.beers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2em;
+  justify-content: center;
+  padding: 2em;
+  .frame {
+    .frame-img {
+      width: 18em;
+    }
+  }
+}

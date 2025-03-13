@@ -1,0 +1,140 @@
+.add {
+  display: flex;
+
+  form {
+    .form-label {
+      text-align: left;
+      width: 100%;
+      font-weight: bold;
+    }
+
+    .nameAndHeart {
+      position: relative;
+
+      .favorite {
+        display: inline;
+        position: absolute;
+        right: 0;
+        top: 1.8em;
+      }
+
+      #name {
+        margin-bottom: 6em;
+        width: 80%;
+      }
+
+      #heart:hover {
+        transform: scale(1.02);
+      }
+
+      #heart {
+        width: 40px;
+      }
+    }
+
+    .rating {
+      display: inline-flex;
+      gap: 5px;
+    }
+
+    div:has(.star) {
+      position: absolute;
+      top: 4em;
+    }
+
+    .ratingRow {
+      margin-bottom: 1em;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .ratingLabel {
+      width: 90px;
+      font-weight: bold;
+      text-align: start;
+    }
+
+    .custom-select {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 5px;
+      margin: 20px 0;
+
+      .option {
+        position: relative;
+        cursor: pointer;
+        text-align: center;
+        width: 70px;
+        margin: 10px 0;
+        padding: 10px 0 8px 5px;
+        transition: transform 0.3s ease;
+      }
+
+      .option:hover {
+        transform: scale(1.04);
+      }
+
+      .option img {
+        width: 50px;
+        height: 50px;
+        object-fit: contain;
+        margin-bottom: 5px;
+      }
+
+      .option.selected {
+        background-color: rgba(248, 189, 49, 0.477);
+        border-radius: 14px;
+      }
+
+      .option p {
+        margin: 0;
+        font-size: 14px;
+        font-weight: 500;
+      }
+
+      .selected-beer {
+        margin-top: 20px;
+        font-size: 18px;
+        font-weight: bold;
+        text-align: center;
+      }
+    }
+  }
+
+  .helper {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    margin: auto;
+    padding: 2em;
+    gap: 3em;
+    border: 7px solid rgb(189, 71, 28);
+    border-radius: 14px;
+
+    .helperimg {
+      height: 3.5dvw;
+    }
+
+    .type:nth-child(odd):last-child {
+      grid-column: span 2;
+      justify-self: center;
+    }
+
+    .type {
+      width: min-content;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      h6 {
+        width: 90%;
+        text-align: center;
+        margin-top: 0.4em;
+      }
+    }
+
+    .desc {
+      font-size: 14px;
+      width: 140px;
+    }
+  }
+}

@@ -1,0 +1,95 @@
+<div class="add">
+  <form>
+    <div class="mb-3 nameAndHeart">
+      <div class="favorite">
+        <label for="heartCheckbox">
+          <img
+            [src]="
+              isChecked
+                ? '/assets/ratings/heart-checked.png'
+                : '/assets/ratings/heart-unchecked.png'
+            "
+            alt="heart"
+            style="cursor: pointer"
+            id="heart"
+          />
+        </label>
+      </div>
+      <input
+        type="checkbox"
+        id="heartCheckbox"
+        [(ngModel)]="isChecked"
+        name="heartCheckbox"
+        class="d-none"
+      />
+      <label for="name" class="form-label">Beer name</label>
+      <input type="text" class="form-control" id="name" />
+    </div>
+
+    <div class="mb-3">
+      <label for="desc" class="form-label">Description</label>
+      <textarea
+        class="form-control"
+        id="desc"
+        name="description"
+        rows="5"
+      ></textarea>
+    </div>
+
+    <div class="custom-select">
+      <div
+        class="option"
+        *ngFor="let beer of beerTypes; let i = index"
+        [ngClass]="{ selected: selectedBeer === beer.name }"
+        (click)="selectBeer(i)"
+      >
+        <img [src]="beer.image" alt="{{ beer.name }}" class="beer-icon" />
+        <p>{{ beer.name }}</p>
+      </div>
+    </div>
+
+    <div *ngFor="let rating of ratings" class="ratingRow">
+      <label
+        *ngIf="rating.attribute != 'star'"
+        for="{{ rating.attribute }}Rating"
+        class="form-label ratingLabel"
+      >
+        {{ rating.attribute | titlecase }}
+      </label>
+
+      <div class="rating">
+        <img
+          *ngFor="let icon of [1, 2, 3, 4, 5]; let i = index"
+          [src]="
+            rating.hover >= i + 1
+              ? getImagePath(rating.attribute, 'full')
+              : rating.hover >= i + 0.5
+              ? getImagePath(rating.attribute, 'half')
+              : getImagePath(rating.attribute, 'empty')
+          "
+          [alt]="rating.attribute"
+          style="cursor: pointer; width: 50px"
+          (mousemove)="previewRating($event, i, rating.attribute)"
+          (mouseleave)="resetHover(rating.attribute)"
+          (click)="setRating(rating.attribute, i, $event)"
+          [class]="rating.attribute"
+        />
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-3">Submit</button>
+  </form>
+  <div class="helper">
+    <div *ngFor="let beer of beerTypes; let i = index" class="type">
+      <div class="title">
+        <img [src]="beer.image" alt="beer.name" class="helperimg" />
+      </div>
+      <div class="desc">
+        <h6>
+          {{ beer.name }}
+        </h6>
+        {{ beer.desc }}
+      </div>
+    </div>
+  </div>
+</div>

@@ -4,10 +4,12 @@ import { LocalStorageService } from '../../local-storage.service';
 
 @Component({
   selector: 'app-home',
-  imports: [LocalStorageService, CommonModule],
+  imports: [CommonModule],
   templateUrl: './home.component.html',
-  styleUrl: './home.component.scss'
+  styleUrl: './home.component.scss',
 })
 export class HomeComponent {
+  constructor(private localstorage: LocalStorageService) {}
 
+  beers = Array(50);
 }

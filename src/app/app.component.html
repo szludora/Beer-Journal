@@ -1,12 +1,18 @@
 <main class="main">
-  <ul ngbNav #nav="ngbNav" class="nav-tabs">
-    <li ngbNavItem>
-      <button ngbNavLink routerLink="">Home</button>
-    </li>
-    <li ngbNavItem>
-      <button ngbNavLink routerLink="/page2">Page 2</button>
-    </li>
-  </ul>
   <div [ngbNavOutlet]="nav"></div>
-  <router-outlet />
+  <header>HEADER</header>
+  <div class="wrapper">
+    <div class="menu" #nav="ngbNav" ngbNav>
+      <button ngbNavItem class="btn btn-success" routerLink="/page2">
+        Add Beer
+      </button>
+      <button ngbNavItem class="btn btn-success" routerLink="">
+        Back to Home
+      </button>
+    </div>
+    <div class="content">
+      <router-outlet />
+    </div>
+  </div>
+  <footer>FOOTER</footer>
 </main>
