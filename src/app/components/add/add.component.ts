@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import beerOptions from './beerOptions.json';
+import { LocalStorageService } from '../../local-storage.service';
 
 @Component({
   selector: 'app-add',
@@ -8,66 +10,43 @@ import { FormsModule } from '@angular/forms';
   imports: [FormsModule, CommonModule],
   styleUrls: ['./add.component.scss'],
 })
-export class AddComponent {
-  beerTypes = [
-    {
-      name: 'Wheat',
-      image: '/assets/beerTypes/wheat.png',
-      desc: 'A light, refreshing beer with a slightly fruity taste.',
-    },
-    {
-      name: 'Pilsner',
-      image: '/assets/beerTypes/pilsner.png',
-      desc: 'A crisp, clean lager with a balanced bitterness.',
-    },
-    {
-      name: 'Pale Ale',
-      image: '/assets/beerTypes/pale_ale.png',
-      desc: 'A hop-forward beer with a slightly bitter finish.',
-    },
-    {
-      name: 'Lager',
-      image: '/assets/beerTypes/lager.png',
-      desc: 'A smooth and mild lager with subtle malt sweetness.',
-    },
-    {
-      name: 'IPA',
-      image: '/assets/beerTypes/ipa.png',
-      desc: 'A hoppy, aromatic beer with a punch of bitterness.',
-    },
-    {
-      name: 'Brown Ale',
-      image: '/assets/beerTypes/brown_ale.png',
-      desc: 'A rich, malty beer with caramel and nutty flavors.',
-    },
-    {
-      name: 'Bock',
-      image: '/assets/beerTypes/bock.png',
-      desc: 'A strong, malty beer with a sweet, toasty flavor.',
-    },
-    {
-      name: 'Stout',
-      image: '/assets/beerTypes/stout.png',
-      desc: 'A dark, rich beer with flavors of coffee and chocolate.',
-    },
-    {
-      name: 'Porter',
-      image: '/assets/beerTypes/porter.png',
-      desc: 'A dark ale with rich, roasted malt flavors.',
-    },
-  ];
+export class AddComponent implements OnInit {
+  constructor(private localstorage: LocalStorageService) {}
 
-  ratings = [
-    { attribute: 'strength', value: 0, hover: 0 },
-    { attribute: 'fruitiness', value: 0, hover: 0 },
-    { attribute: 'price', value: 0, hover: 0 },
-    { attribute: 'aftertaste', value: 0, hover: 0 },
-    { attribute: 'star', value: 0, hover: 0 },
-  ];
+  ngOnInit() {
+    this.beerTypes = beerOptions.beerTypes;
+    this.ratings = beerOptions.ratings;
+  }
 
-  starRating = {value: 0, hover: 0}
+  beerTypes: any = [];
+  ratings: { attribute: string; value: number; hover: number }[] = [];
+  beerName = '';
+  description = '';
+  imageData: string | null = null;
 
-  isChecked = false;
+  onFileSelected(event: Event) {
+    const file = (event.target as HTMLInputElement).files?.[0];
+
+    if (file) {
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        this.imageData = reader.result as string;
+        localStorage.setItem('uploadedImage', this.imageData);
+      };
+
+      reader.readAsDataURL(file);
+    }
+  }
+
+  deleteImage() {
+    localStorage.removeItem('uploadedImage');
+    this.imageData = null;
+  }
+
+  starRating = { value: 0, hover: 0 };
+
+  isFavorite = false;
 
   selectedBeer: string = '';
 
@@ -76,46 +55,67 @@ export class AddComponent {
   }
 
   setRating(attribute: string, index: number, event: MouseEvent) {
-    const rating = this.ratings.find(r => r.attribute === attribute);
+    const rating = this.ratings.find((r) => r.attribute === attribute);
     if (rating) {
       const starElement = event.target as HTMLElement;
       const starWidth = starElement.offsetWidth;
       const clickPosition = event.offsetX;
-  
+
       if (clickPosition < starWidth / 2) {
         rating.value = index + 0.5;
       } else {
         rating.value = index + 1;
       }
-  
+
       rating.hover = rating.value;
     }
   }
-  
+
   previewRating(event: MouseEvent, index: number, attribute: string) {
-    const rating = this.ratings.find(r => r.attribute === attribute);
+    const rating = this.ratings.find((r) => r.attribute === attribute);
     if (rating) {
       const starElement = event.target as HTMLElement;
       const starWidth = starElement.offsetWidth;
       const clickPosition = event.offsetX;
-  
+
       if (clickPosition < starWidth / 2) {
-        rating.hover = index + 0.5; 
+        rating.hover = index + 0.5;
       } else {
         rating.hover = index + 1;
       }
     }
   }
-  
+
   resetHover(attribute: string) {
-    const rating = this.ratings.find(r => r.attribute === attribute);
+    const rating = this.ratings.find((r) => r.attribute === attribute);
     if (rating) {
       rating.hover = rating.value;
     }
   }
-  
 
-  getImagePath(attribute: string, type: string): string {    
+  getImagePath(attribute: string, type: string): string {
     return `/assets/ratings/${attribute}-${type}.png`;
+  }
+
+  submit() {
+    const formData = {
+      isFavorite: this.isFavorite,
+      beerName: this.beerName,
+      description: this.description,
+      selectedBeer: this.selectedBeer,
+      ratings: this.ratings,
+      imageData: this.imageData,
+    };
+
+    let list = localStorage.getItem('beers');
+
+    if (list) {
+      let beers = JSON.parse(list);
+      beers.push(formData);
+      localStorage.setItem('beers', JSON.stringify(beers));
+    } else {
+      localStorage.setItem('beers', JSON.stringify([formData]));
+    }
+
   }
 }

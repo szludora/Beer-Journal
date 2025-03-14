@@ -4,9 +4,30 @@
   gap: 2em;
   justify-content: center;
   padding: 2em;
+
   .frame {
-    .frame-img {
-      width: 18em;
-    }
+    position: relative;
+    width: 18em;
+    height: 18em;
+    background-image: url("/assets/wood.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+
+  .sticker {
+    width: 12em;
+    height: 12em;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    overflow: hidden;
+    clip-path: circle(50% at center);
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 }

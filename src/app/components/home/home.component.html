@@ -1,9 +1,15 @@
 <div class="beers">
-
-    <div *ngFor="let item of beers" class="frame">
-        <img src="/assets/wood.png" alt="frame" class="frame-img">
+  <div
+    *ngFor="let item of beers; let i = index"
+    [routerLink]="['/beer', i]"
+    class="frame"
+  >
+    <div class="sticker">
+      <img
+        [src]="item.imageData ? item.imageData : '/assets/noPicture.jpg'"
+        [alt]="item.imageData ? 'beer' : 'noPicture'"
+      />
     </div>
-
+  </div>
 </div>
-<div class="add">
-</div>
+<div class="add"></div>

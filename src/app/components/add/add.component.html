@@ -1,11 +1,11 @@
 <div class="add">
-  <form>
+  <form (ngSubmit)="submit()" #myForm="ngForm">
     <div class="mb-3 nameAndHeart">
       <div class="favorite">
         <label for="heartCheckbox">
           <img
             [src]="
-              isChecked
+              isFavorite
                 ? '/assets/ratings/heart-checked.png'
                 : '/assets/ratings/heart-unchecked.png'
             "
@@ -18,12 +18,30 @@
       <input
         type="checkbox"
         id="heartCheckbox"
-        [(ngModel)]="isChecked"
+        [(ngModel)]="isFavorite"
         name="heartCheckbox"
         class="d-none"
       />
       <label for="name" class="form-label">Beer name</label>
-      <input type="text" class="form-control" id="name" />
+      <input
+        type="text"
+        class="form-control"
+        id="name"
+        name="beerName"
+        [(ngModel)]="beerName"
+      />
+    </div>
+
+    <div class="photoUpload">
+      <h2>Upload Image</h2>
+
+      <input type="file" (change)="onFileSelected($event)" accept="image/*" />
+
+      <div *ngIf="imageData">
+        <h3>Preview:</h3>
+        <img [src]="imageData" alt="Uploaded Image" class="preview" />
+        <button (click)="deleteImage()">Delete</button>
+      </div>
     </div>
 
     <div class="mb-3">
@@ -33,6 +51,7 @@
         id="desc"
         name="description"
         rows="5"
+        [(ngModel)]="description"
       ></textarea>
     </div>
 

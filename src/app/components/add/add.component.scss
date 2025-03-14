@@ -100,6 +100,25 @@
         text-align: center;
       }
     }
+
+    .photoUpload {
+      text-align: center;
+    }
+
+    .preview {
+      max-width: 300px;
+      margin-top: 10px;
+      border-radius: 10px;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 5px 10px;
+      background-color: red;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
   }
 
   .helper {

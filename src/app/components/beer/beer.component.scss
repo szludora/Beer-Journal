@@ -1,0 +1,118 @@
+form{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.frame {
+  position: relative;
+  width: 18em;
+  height: 18em;
+  background-image: url("/assets/wood.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+
+  .modify {
+    display: none;
+    position: absolute;
+    width: 32px;
+    height: auto;
+    top: -20px;
+    right: -20px;
+    cursor: pointer;
+  }
+}
+
+.cancel {
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  position: absolute;
+}
+
+.descModify {
+  position: relative;
+  .cancel {
+    right: 0;
+  }
+}
+
+.descWrapper {
+  display: flex;
+  justify-content: center;
+  gap: 1em;
+
+  .modify {
+    visibility: hidden;
+    height: 32px;
+    width: 32px;
+    cursor: pointer;
+  }
+}
+
+.descWrapper:hover {
+  .modify {
+    visibility: visible;
+  }
+}
+
+.photoUpload {
+  text-align: center;
+  position: relative;
+  .cancel{
+    right: 0;
+  }
+}
+
+.preview {
+  max-width: 300px;
+  margin-top: 10px;
+  border-radius: 10px;
+}
+
+button {
+  margin-top: 10px;
+  padding: 5px 10px;
+  background-color: red;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.frame:hover {
+  .modify {
+    display: block;
+  }
+}
+.sticker {
+  width: 12em;
+  height: 12em;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  overflow: hidden;
+  clip-path: circle(50% at center);
+}
+
+img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.favorite {
+  display: inline;
+  position: absolute;
+  right: 0;
+  top: 1.8em;
+}
+
+#heart:hover {
+  transform: scale(1.02);
+}
+
+#heart {
+  width: 40px;
+}

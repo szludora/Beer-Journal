@@ -1,0 +1,115 @@
+<div class="beer" *ngIf="beer">
+  <form (ngSubmit)="submit()" #myForm="ngForm">
+    <h3>Name: {{ beer.beerName }}</h3>
+
+    <div class="desc">
+      <div class="descWrapper">
+        <div class="title">
+          Description: <br />
+          {{ beer.description }}
+        </div>
+        <div class="modify">
+          <img
+            src="/assets/modify.png"
+            (click)="modify('desc')"
+            alt="modify"
+            class="modify"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-3 descModify" *ngIf="isModifyDesc">
+      <img src="/assets/cancel.png" (click)="modify('desc')" alt="cancel" class="cancel">
+      <label for="desc" class="form-label">Description</label>
+      <textarea
+        class="form-control"
+        id="desc"
+        name="description"
+        rows="5"
+        [(ngModel)]="beer.description"
+      ></textarea>
+      <button (click)="modify('desc')">Modify</button>
+    </div>
+
+    <div class="photoUpload" *ngIf="isModifyImg">
+      <img src="/assets/cancel.png" (click)="modify('img')" alt="cancel" class="cancel">
+      <input type="file" (change)="onFileSelected($event)" accept="image/*" />
+
+      <div *ngIf="beer.imageData">
+        <button (click)="deleteImage()">Delete</button>
+      </div>
+    </div>
+
+    <div class="frame">
+      <img
+        src="/assets/modify.png"
+        (click)="modify('img')"
+        alt="modify"
+        class="modify"
+      />
+      <div class="sticker">
+        <img
+          [src]="beer.imageData ? beer.imageData : '/assets/noPicture.jpg'"
+          alt="beer"
+        />
+      </div>
+    </div>
+
+    <div class="favorite">
+      <label for="heartCheckbox">
+        <img
+          [src]="
+            beer.isFavorite
+              ? '/assets/ratings/heart-checked.png'
+              : '/assets/ratings/heart-unchecked.png'
+          "
+          (click)="changeFavorite()"
+          alt="heart"
+          style="cursor: pointer"
+          id="heart"
+        />
+      </label>
+    </div>
+    <input
+      type="checkbox"
+      id="heartCheckbox"
+      [value]="beer.isFavorite"
+      ([ngModel])="(beer.isFavorite)"
+      name="heartCheckbox"
+      class="d-none"
+    />
+
+    {{ beer.selectedBeer }}
+
+    <div *ngFor="let rating of beer.ratings" class="ratingRow">
+      <label
+        *ngIf="rating.attribute != 'star'"
+        for="{{ rating.attribute }}Rating"
+        class="form-label ratingLabel"
+      >
+        {{ rating.attribute | titlecase }}
+      </label>
+
+      <div class="rating">
+        <img
+          *ngFor="let icon of [1, 2, 3, 4, 5]; let i = index"
+          [src]="
+            rating.hover >= i + 1
+              ? getImagePath(rating.attribute, 'full')
+              : rating.hover >= i + 0.5
+              ? getImagePath(rating.attribute, 'half')
+              : getImagePath(rating.attribute, 'empty')
+          "
+          [alt]="rating.attribute"
+          style="cursor: pointer; width: 50px"
+          (mousemove)="previewRating($event, i, rating.attribute)"
+          (mouseleave)="resetHover(rating.attribute)"
+          (click)="setRating(rating.attribute, i, $event)"
+          [class]="rating.attribute"
+        />
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary mt-3">Submit</button>
+  </form>
+</div>
