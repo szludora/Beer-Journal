@@ -1,17 +1,14 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormService } from '../../form.service';
 import beerOptions from './beerOptions.json';
-import { LocalStorageService } from '../../local-storage.service';
 
 @Component({
   selector: 'app-add',
   templateUrl: './add.component.html',
-  imports: [FormsModule, CommonModule],
   styleUrls: ['./add.component.scss'],
 })
 export class AddComponent implements OnInit {
-  constructor(private localstorage: LocalStorageService) {}
+  constructor(private beerService: FormService) {}
 
   ngOnInit() {
     this.beerTypes = beerOptions.beerTypes;
@@ -25,29 +22,15 @@ export class AddComponent implements OnInit {
   imageData: string | null = null;
 
   onFileSelected(event: Event) {
-    const file = (event.target as HTMLInputElement).files?.[0];
-
-    if (file) {
-      const reader = new FileReader();
-
-      reader.onload = () => {
-        this.imageData = reader.result as string;
-        localStorage.setItem('uploadedImage', this.imageData);
-      };
-
-      reader.readAsDataURL(file);
-    }
+    this.beerService.handleFileSelected(event, -1, this.beerService.beer);
   }
 
   deleteImage() {
-    localStorage.removeItem('uploadedImage');
-    this.imageData = null;
+    this.beerService.deleteImage(-1, this.beerService.beer);
   }
 
   starRating = { value: 0, hover: 0 };
-
   isFavorite = false;
-
   selectedBeer: string = '';
 
   selectBeer(index: number) {
@@ -55,46 +38,19 @@ export class AddComponent implements OnInit {
   }
 
   setRating(attribute: string, index: number, event: MouseEvent) {
-    const rating = this.ratings.find((r) => r.attribute === attribute);
-    if (rating) {
-      const starElement = event.target as HTMLElement;
-      const starWidth = starElement.offsetWidth;
-      const clickPosition = event.offsetX;
-
-      if (clickPosition < starWidth / 2) {
-        rating.value = index + 0.5;
-      } else {
-        rating.value = index + 1;
-      }
-
-      rating.hover = rating.value;
-    }
+    this.beerService.setRating(attribute, index, event);
   }
 
   previewRating(event: MouseEvent, index: number, attribute: string) {
-    const rating = this.ratings.find((r) => r.attribute === attribute);
-    if (rating) {
-      const starElement = event.target as HTMLElement;
-      const starWidth = starElement.offsetWidth;
-      const clickPosition = event.offsetX;
-
-      if (clickPosition < starWidth / 2) {
-        rating.hover = index + 0.5;
-      } else {
-        rating.hover = index + 1;
-      }
-    }
+    this.beerService.previewRating(event, index, attribute);
   }
 
   resetHover(attribute: string) {
-    const rating = this.ratings.find((r) => r.attribute === attribute);
-    if (rating) {
-      rating.hover = rating.value;
-    }
+    this.beerService.resetHover(attribute);
   }
 
   getImagePath(attribute: string, type: string): string {
-    return `/assets/ratings/${attribute}-${type}.png`;
+    return this.beerService.getImagePath(attribute, type);
   }
 
   submit() {
@@ -106,16 +62,6 @@ export class AddComponent implements OnInit {
       ratings: this.ratings,
       imageData: this.imageData,
     };
-
-    let list = localStorage.getItem('beers');
-
-    if (list) {
-      let beers = JSON.parse(list);
-      beers.push(formData);
-      localStorage.setItem('beers', JSON.stringify(beers));
-    } else {
-      localStorage.setItem('beers', JSON.stringify([formData]));
-    }
-
+    this.beerService.saveToLocalStorage(-1, formData);
   }
 }
