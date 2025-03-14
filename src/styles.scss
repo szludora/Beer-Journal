@@ -16,7 +16,8 @@ body {
   display: flex;
   margin-left: 2em;
   padding-right: 2dvw;
-  width: 19dvw;
+  width: 10dvw;
+  max-width: 200px;
   gap: 1em;
 }
 
@@ -25,10 +26,11 @@ header {
 }
 
 .content {
-  width: 80dvw;
+  width: 90dvw;
+  max-width: 1400px;
   padding: 2em;
   position: relative;
-  margin-right: 2em;
+  margin: auto auto;
   background-color: rgb(255, 238, 195);
   overflow: auto;
 }
