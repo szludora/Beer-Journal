@@ -20,8 +20,11 @@ body {
   gap: 1em;
 }
 
+header {
+  height: 6dvh;
+}
+
 .content {
-  height: 90dvh;
   width: 80dvw;
   padding: 2em;
   position: relative;
@@ -31,7 +34,6 @@ body {
 }
 
 footer {
-  position: absolute;
-  width: 100dvw;
+  width: 99dvw;
   bottom: 1em;
 }

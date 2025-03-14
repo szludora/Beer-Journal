@@ -1,12 +1,12 @@
-<div class="beer" *ngIf="beer">
+<div class="beer">
   <form (ngSubmit)="submit()" #myForm="ngForm">
-    <h3>Name: {{ beer.beerName }}</h3>
+    <h3>Name: {{ formService.beer.beerName }}</h3>
 
     <div class="desc">
       <div class="descWrapper">
         <div class="title">
           Description: <br />
-          {{ beer.description }}
+          {{ formService.beer.description }}
         </div>
         <div class="modify">
           <img
@@ -20,23 +20,33 @@
     </div>
 
     <div class="mb-3 descModify" *ngIf="isModifyDesc">
-      <img src="/assets/cancel.png" (click)="modify('desc')" alt="cancel" class="cancel">
+      <img
+        src="/assets/cancel.png"
+        (click)="modify('desc')"
+        alt="cancel"
+        class="cancel"
+      />
       <label for="desc" class="form-label">Description</label>
       <textarea
         class="form-control"
         id="desc"
         name="description"
         rows="5"
-        [(ngModel)]="beer.description"
+        [(ngModel)]="formService.beer.description"
       ></textarea>
       <button (click)="modify('desc')">Modify</button>
     </div>
 
     <div class="photoUpload" *ngIf="isModifyImg">
-      <img src="/assets/cancel.png" (click)="modify('img')" alt="cancel" class="cancel">
+      <img
+        src="/assets/cancel.png"
+        (click)="modify('img')"
+        alt="cancel"
+        class="cancel"
+      />
       <input type="file" (change)="onFileSelected($event)" accept="image/*" />
 
-      <div *ngIf="beer.imageData">
+      <div *ngIf="formService.beer.imageData">
         <button (click)="deleteImage()">Delete</button>
       </div>
     </div>
@@ -50,7 +60,11 @@
       />
       <div class="sticker">
         <img
-          [src]="beer.imageData ? beer.imageData : '/assets/noPicture.jpg'"
+          [src]="
+            formService.beer.imageData
+              ? formService.beer.imageData
+              : '/assets/noPicture.jpg'
+          "
           alt="beer"
         />
       </div>
@@ -60,7 +74,7 @@
       <label for="heartCheckbox">
         <img
           [src]="
-            beer.isFavorite
+            formService.beer.isFavorite
               ? '/assets/ratings/heart-checked.png'
               : '/assets/ratings/heart-unchecked.png'
           "
@@ -74,21 +88,21 @@
     <input
       type="checkbox"
       id="heartCheckbox"
-      [value]="beer.isFavorite"
-      ([ngModel])="(beer.isFavorite)"
+      [value]="formService.beer.isFavorite"
+      [(ngModel)]="formService.beer.isFavorite"
       name="heartCheckbox"
       class="d-none"
     />
 
-    {{ beer.selectedBeer }}
+    {{ formService.beer.selectedBeer }}
 
-    <div *ngFor="let rating of beer.ratings" class="ratingRow">
+    <div *ngFor="let rating of formService.beer.ratings" class="ratingRow">
       <label
         *ngIf="rating.attribute != 'star'"
         for="{{ rating.attribute }}Rating"
         class="form-label ratingLabel"
       >
-        {{ rating.attribute | titlecase }}
+        {{ rating.attribute }}
       </label>
 
       <div class="rating">
@@ -111,6 +125,6 @@
       </div>
     </div>
     <button type="submit" class="btn btn-primary mt-3">Submit</button>
-    <button (click)="delete()"  class="btn btn-primary mt-3">Delete</button>
+    <button (click)="delete()" class="btn btn-primary mt-3">Delete</button>
   </form>
 </div>

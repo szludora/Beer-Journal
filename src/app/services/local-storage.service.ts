@@ -4,8 +4,6 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class LocalStorageService {
-  constructor() {}
-
   setItem(key: string, value: any): void {
     localStorage.setItem(key, JSON.stringify(value));
   }
@@ -22,17 +20,16 @@ export class LocalStorageService {
     localStorage.clear();
   }
 
-  removeOneItem(key: string, index: number) {
-    let list = localStorage.getItem('beers');
-
+  removeOneItem(key: string, index: number): void {
+    let list = this.getItem(key);
     if (list) {
       let beers = JSON.parse(list);
-      beers.splice(beers[index], 1);
-      localStorage.setItem(key, JSON.stringify(beers));
+      beers.splice(index, 1);
+      this.setItem(key, beers);
     }
   }
 
-  changeFavorite(index: number) {
+  changeFavorite(index: number): void {
     let list = this.getItem('beers');
     if (list) {
       let beers = JSON.parse(list);
@@ -41,13 +38,12 @@ export class LocalStorageService {
     }
   }
 
-  updateBeerInLocalStorage(index: number, attr: string, value: string) {
-    let list = localStorage.getItem('beers');
-
+  updateBeerInLocalStorage(index: number, attr: string, value: string): void {
+    let list = this.getItem('beers');
     if (list) {
       let beers = JSON.parse(list);
-      beers[index].attr = value;
-      localStorage.setItem('beers', JSON.stringify(beers));
+      beers[index][attr] = value;
+      this.setItem('beers', beers);
     }
   }
 }

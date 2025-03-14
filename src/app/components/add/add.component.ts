@@ -1,20 +1,30 @@
 import { Component, OnInit } from '@angular/core';
-import { FormService } from '../../form.service';
+import { FormService } from '../../services/form.service';
 import beerOptions from './beerOptions.json';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-add',
   templateUrl: './add.component.html',
   styleUrls: ['./add.component.scss'],
+  imports: [FormsModule, CommonModule],
 })
 export class AddComponent implements OnInit {
-  constructor(private beerService: FormService) {}
+  constructor(public formService: FormService) {}
 
-  ngOnInit() {
+  starRating = { value: 0, hover: 0 };
+  isFavorite = false;
+  selectedBeer: string = '';
+  isFormInvalid = false;
+  isRatingInvalid = false;
+
+  ngOnInit(): void {
+    this.formService.resetBeer();
+
     this.beerTypes = beerOptions.beerTypes;
     this.ratings = beerOptions.ratings;
   }
-
   beerTypes: any = [];
   ratings: { attribute: string; value: number; hover: number }[] = [];
   beerName = '';
@@ -22,46 +32,53 @@ export class AddComponent implements OnInit {
   imageData: string | null = null;
 
   onFileSelected(event: Event) {
-    this.beerService.handleFileSelected(event, -1, this.beerService.beer);
+    this.formService.handleFileSelected(event, -1, this.formService.beer);
   }
 
   deleteImage() {
-    this.beerService.deleteImage(-1, this.beerService.beer);
+    this.formService.deleteImage(-1, this.formService.beer);
   }
 
-  starRating = { value: 0, hover: 0 };
-  isFavorite = false;
-  selectedBeer: string = '';
-
   selectBeer(index: number) {
-    this.selectedBeer = this.beerTypes[index].name;
+    const selectedBeer = this.beerTypes[index];
+    this.formService.beer.selectedBeer = selectedBeer.name;
   }
 
   setRating(attribute: string, index: number, event: MouseEvent) {
-    this.beerService.setRating(attribute, index, event);
+    this.formService.setRating(attribute, index, event);
   }
 
   previewRating(event: MouseEvent, index: number, attribute: string) {
-    this.beerService.previewRating(event, index, attribute);
+    this.formService.previewRating(event, index, attribute);
   }
 
   resetHover(attribute: string) {
-    this.beerService.resetHover(attribute);
+    this.formService.resetHover(attribute);
   }
 
   getImagePath(attribute: string, type: string): string {
-    return this.beerService.getImagePath(attribute, type);
+    return this.formService.getImagePath(attribute, type);
   }
-
   submit() {
+    this.isFormInvalid =
+      !this.formService.beer.beerName || !this.formService.beer.selectedBeer;
+    this.isRatingInvalid = !this.formService.beer.ratings.every(
+      (rating) => rating.value > 0
+    );
+
+    if (this.isFormInvalid || this.isRatingInvalid) {
+      return;
+    }
+
     const formData = {
-      isFavorite: this.isFavorite,
-      beerName: this.beerName,
-      description: this.description,
-      selectedBeer: this.selectedBeer,
-      ratings: this.ratings,
-      imageData: this.imageData,
+      isFavorite: this.formService.beer.isFavorite,
+      beerName: this.formService.beer.beerName,
+      description: this.formService.beer.description,
+      selectedBeer: this.formService.beer.selectedBeer,
+      ratings: this.formService.beer.ratings,
+      imageData: this.formService.beer.imageData,
     };
-    this.beerService.saveToLocalStorage(-1, formData);
+
+    this.formService.saveToLocalStorage(-1, formData);
   }
 }

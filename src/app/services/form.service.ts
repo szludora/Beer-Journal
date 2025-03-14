@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
+import { LocalStorageService } from './local-storage.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FormService {
-  constructor() {}
+  constructor(private localstorage: LocalStorageService) {}
 
   beer: {
     beerName: string;
@@ -28,6 +29,23 @@ export class FormService {
     ],
   };
 
+  resetBeer(): void {
+    this.beer = {
+      beerName: '',
+      description: '',
+      imageData: '',
+      isFavorite: false,
+      selectedBeer: '',
+      ratings: [
+        { attribute: 'strength', value: 0, hover: 0 },
+        { attribute: 'fruitiness', value: 0, hover: 0 },
+        { attribute: 'price', value: 0, hover: 0 },
+        { attribute: 'aftertaste', value: 0, hover: 0 },
+        { attribute: 'star', value: 0, hover: 0 },
+      ],
+    };
+  }
+  
   setRating(attribute: string, index: number, event: MouseEvent) {
     const rating = this.beer.ratings.find((r) => r.attribute === attribute);
     if (rating) {
@@ -72,7 +90,7 @@ export class FormService {
   }
 
   saveToLocalStorage(current: number, beer: any) {
-    let list = localStorage.getItem('beers');
+    let list = this.localstorage.getItem('beers');
     if (list) {
       let beers = JSON.parse(list);
       if (current >= 0) {
@@ -80,9 +98,9 @@ export class FormService {
       } else {
         beers.push(beer);
       }
-      localStorage.setItem('beers', JSON.stringify(beers));
+      this.localstorage.setItem('beers', beers);
     } else {
-      localStorage.setItem('beers', JSON.stringify([beer]));
+      this.localstorage.setItem('beers', [beer]);
     }
   }
 
@@ -91,12 +109,18 @@ export class FormService {
     if (file) {
       const reader = new FileReader();
       reader.onload = () => {
+        // Update the beer object with the new image data (without saving to localStorage yet)
         beer.imageData = reader.result as string;
-        this.saveToLocalStorage(current, beer);
       };
-      reader.readAsDataURL(file);
+      reader.onerror = () => {
+        console.error('Error reading the file');
+      };
+      reader.readAsDataURL(file); // Convert the file to base64 string
+    } else {
+      console.error('No file selected');
     }
   }
+  
 
   deleteImage(current: number, beer: any) {
     beer.imageData = '';
@@ -109,11 +133,11 @@ export class FormService {
   }
 
   deleteBeer(current: number) {
-    let list = localStorage.getItem('beers');
+    let list = this.localstorage.getItem('beers');
     if (list) {
       let beers = JSON.parse(list);
       beers.splice(current, 1);
-      localStorage.setItem('beers', JSON.stringify(beers));
+      this.localstorage.setItem('beers', beers);
     }
   }
 }

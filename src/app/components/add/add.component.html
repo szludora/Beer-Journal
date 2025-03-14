@@ -1,11 +1,20 @@
 <div class="add">
   <form (ngSubmit)="submit()" #myForm="ngForm">
+    <div class="errors">
+      <div *ngIf="isFormInvalid" class="alert alert-danger">
+        Please fill in all required fields!
+      </div>
+
+      <div *ngIf="isRatingInvalid" class="alert alert-danger">
+        Please provide a rating for all attributes!
+      </div>
+    </div>
     <div class="mb-3 nameAndHeart">
       <div class="favorite">
         <label for="heartCheckbox">
           <img
             [src]="
-              isFavorite
+              formService.beer.isFavorite
                 ? '/assets/ratings/heart-checked.png'
                 : '/assets/ratings/heart-unchecked.png'
             "
@@ -18,7 +27,7 @@
       <input
         type="checkbox"
         id="heartCheckbox"
-        [(ngModel)]="isFavorite"
+        [(ngModel)]="formService.beer.isFavorite"
         name="heartCheckbox"
         class="d-none"
       />
@@ -28,20 +37,39 @@
         class="form-control"
         id="name"
         name="beerName"
-        [(ngModel)]="beerName"
+        required
+        [(ngModel)]="formService.beer.beerName"
+        #beerName="ngModel"
       />
+     
     </div>
 
     <div class="photoUpload">
-      <h2>Upload Image</h2>
-
-      <input type="file" (change)="onFileSelected($event)" accept="image/*" />
-
-      <div *ngIf="imageData">
-        <h3>Preview:</h3>
-        <img [src]="imageData" alt="Uploaded Image" class="preview" />
-        <button (click)="deleteImage()">Delete</button>
+      <input
+        type="file"
+        (change)="onFileSelected($event)"
+        accept="image/*"
+        id="file"
+        class="d-none"
+      />
+      <label for="file" class="uploadBtn btn btn-primary">
+        <span>Upload</span>
+        <img src="/assets/upload.png" alt="upload image" />
+      </label>
+      <div *ngIf="formService.beer.imageData; else noPicture" class="preview">
+        <img [src]="formService.beer.imageData" alt="Uploaded Image" />
       </div>
+      <ng-template #noPicture>
+        <div class="preview"></div>
+      </ng-template>
+
+      <button
+        *ngIf="formService.beer.imageData"
+        (click)="deleteImage()"
+        class="btn btn-danger"
+      >
+        Delete
+      </button>
     </div>
 
     <div class="mb-3">
@@ -51,7 +79,7 @@
         id="desc"
         name="description"
         rows="5"
-        [(ngModel)]="description"
+        [(ngModel)]="formService.beer.description"
       ></textarea>
     </div>
 
@@ -59,7 +87,7 @@
       <div
         class="option"
         *ngFor="let beer of beerTypes; let i = index"
-        [ngClass]="{ selected: selectedBeer === beer.name }"
+        [class.selected]="formService.beer.selectedBeer === beer.name"
         (click)="selectBeer(i)"
       >
         <img [src]="beer.image" alt="{{ beer.name }}" class="beer-icon" />
@@ -67,12 +95,8 @@
       </div>
     </div>
 
-    <div *ngFor="let rating of ratings" class="ratingRow">
-      <label
-        *ngIf="rating.attribute != 'star'"
-        for="{{ rating.attribute }}Rating"
-        class="form-label ratingLabel"
-      >
+    <div *ngFor="let rating of formService.beer.ratings" class="ratingRow">
+      <label for="{{ rating.attribute }}Rating" class="form-label ratingLabel">
         {{ rating.attribute | titlecase }}
       </label>
 
@@ -98,6 +122,7 @@
 
     <button type="submit" class="btn btn-primary mt-3">Submit</button>
   </form>
+
   <div class="helper">
     <div *ngFor="let beer of beerTypes; let i = index" class="type">
       <div class="title">

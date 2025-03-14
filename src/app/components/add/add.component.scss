@@ -1,7 +1,20 @@
 .add {
   display: flex;
 
+  .errors {
+  }
+
   form {
+
+    border: solid 7px rgb(254, 193, 78);
+    padding: 2em 5em;
+    border-radius: 14px;
+    width: 50%;
+    input,
+    label,
+    .preview {
+      margin-bottom: 1em;
+    }
     .form-label {
       text-align: left;
       width: 100%;
@@ -19,7 +32,6 @@
       }
 
       #name {
-        margin-bottom: 6em;
         width: 80%;
       }
 
@@ -35,11 +47,6 @@
     .rating {
       display: inline-flex;
       gap: 5px;
-    }
-
-    div:has(.star) {
-      position: absolute;
-      top: 4em;
     }
 
     .ratingRow {
@@ -106,15 +113,42 @@
     }
 
     .preview {
-      max-width: 300px;
-      margin-top: 10px;
-      border-radius: 10px;
+      background-image: url("/assets/wood.png");
+      background-size: contain;
+      background-repeat: no-repeat;
+      width: 18em;
+      height: 18em;
+      position: relative;
+      img {
+        width: 12em;
+        height: 12em;
+        position: absolute;
+        object-fit: cover;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        overflow: hidden;
+        clip-path: circle(50% at center);
+      }
+    }
+    .uploadBtn {
+      cursor: pointer;
+      img {
+        width: 1.3rem;
+        height: 1.3rem;
+        filter: invert(1);
+        transform: translateY(-10%);
+      }
+
+      span {
+        margin-right: 10px;
+        text-align: center;
+      }
     }
 
     button {
       margin-top: 10px;
       padding: 5px 10px;
-      background-color: red;
       color: white;
       border: none;
       cursor: pointer;
