@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { LocalStorageService } from '../../local-storage.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-beer',
@@ -10,7 +11,10 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./beer.component.scss'],
 })
 export class BeerComponent implements OnInit {
-  constructor(private localstorage: LocalStorageService) {}
+  constructor(
+    private localstorage: LocalStorageService,
+    private router: Router
+  ) {}
 
   current: number = 0;
   beer: {
@@ -173,5 +177,17 @@ export class BeerComponent implements OnInit {
   deleteImage() {
     localStorage.removeItem('uploadedImage');
     this.beer.imageData = '';
+  }
+
+  delete() {
+    let list = localStorage.getItem('beers');
+
+    if (list) {
+      let beers = JSON.parse(list);
+
+      this.localstorage.removeOneItem('beers', this.current);
+
+      this.router.navigate(['/']);
+    }
   }
 }

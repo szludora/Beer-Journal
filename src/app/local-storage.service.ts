@@ -22,6 +22,16 @@ export class LocalStorageService {
     localStorage.clear();
   }
 
+  removeOneItem(key: string, index: number) {
+    let list = localStorage.getItem('beers');
+
+    if (list) {
+      let beers = JSON.parse(list);
+      beers.splice(beers[index], 1);
+      localStorage.setItem(key, JSON.stringify(beers));
+    }
+  }
+
   changeFavorite(index: number) {
     let list = this.getItem('beers');
     if (list) {
@@ -31,7 +41,7 @@ export class LocalStorageService {
     }
   }
 
-  updateBeerInLocalStorage(index: number, attr:string, value: string) {
+  updateBeerInLocalStorage(index: number, attr: string, value: string) {
     let list = localStorage.getItem('beers');
 
     if (list) {
